@@ -11,8 +11,6 @@ interface Message {
     timestamp: string;
 }
 
-let socket: Socket;
-
 export default function CommunicationPage() {
     const { data: session } = useSession();
     const [messages, setMessages] = useState<Message[]>([]);
@@ -20,19 +18,25 @@ export default function CommunicationPage() {
     const [accountOpen, setAccountOpen] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const accountRef = useRef<HTMLDivElement>(null);
+    const socketRef = useRef<Socket | null>(null);
 
     useEffect(() => {
-        if (!session?.user?.name) return;
+        const username = session?.user?.name || session?.user?.email;
+        if (!username) return;
 
-        socket = io(apiConfig.baseUrl, {
-            transports: ["websocket"],
-        });
+        if (!socketRef.current) {
+            socketRef.current = io(apiConfig.baseUrl, {
+                transports: ["websocket"],
+            });
+        }
+        const socket = socketRef.current;
 
         socket.on("connect", () => {
             console.log("Connected to WebSocket server");
         });
 
         socket.on("newMessage", (message: Message) => {
+            console.log("Received newMessage from server:", message);
             setMessages((prev) => [...prev, message]);
         });
 
@@ -53,14 +57,16 @@ export default function CommunicationPage() {
 
         return () => {
             socket.disconnect();
+            socketRef.current = null;
         };
     }, [session]);
 
     const sendMessage = () => {
-        if (!input.trim() || !session?.user?.name) return;
-
-        socket.emit("newMessage", {
-            user: session.user.name,
+        const username = session?.user?.name || session?.user?.email;
+        if (!input.trim() || !username) return;
+        console.log("Sending message:", input.trim());
+        socketRef.current?.emit("newMessage", {
+            user: username,
             text: input.trim(),
         });
 
@@ -86,6 +92,14 @@ export default function CommunicationPage() {
         return () => document.removeEventListener("mousedown", handleClick);
     }, [accountOpen]);
 
+    if (typeof window !== "undefined" && window.location.port !== "3001") {
+        return (
+            <div className="flex items-center justify-center h-screen bg-red-900 text-white text-xl font-bold">
+                Please use http://localhost:3001 to access the app frontend.
+            </div>
+        );
+    }
+
     if (!session) return <p className="text-center text-white">Loading...</p>;
 
     return (
@@ -109,7 +123,10 @@ export default function CommunicationPage() {
                             </p>
                             <button
                                 onClick={() =>
-                                    signOut({ callbackUrl: "/auth" })
+                                    signOut({
+                                        callbackUrl:
+                                            "http://localhost:3001/auth",
+                                    })
                                 }
                                 className="w-full text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded"
                             >
@@ -121,31 +138,80 @@ export default function CommunicationPage() {
             </div>
 
             {/* Chat Area */}
-            <div className="flex-1 overflow-y-auto bg-white/10 rounded p-4 space-y-2 border border-white/20 shadow-inner">
+            <div className="flex-1 overflow-y-auto bg-gradient-to-b from-gray-900 via-gray-950 to-gray-900 rounded p-4 space-y-3 border border-white/20 shadow-inner">
                 {messages.map((msg, idx) => {
-                    const isCurrentUser = msg.user === session.user?.name;
+                    const isCurrentUser =
+                        msg.user ===
+                        (session.user?.name || session.user?.email);
                     const isSystem = msg.user === "System";
 
                     return (
                         <div
                             key={idx}
-                            className={`p-3 rounded-lg shadow-md max-w-[80%] ${
+                            className={
                                 isSystem
-                                    ? "bg-yellow-300 text-black mx-auto text-center"
+                                    ? "flex justify-center"
                                     : isCurrentUser
-                                    ? "bg-blue-600 text-white self-end ml-auto"
-                                    : "bg-gray-800 text-white self-start mr-auto"
-                            }`}
+                                    ? "flex justify-end"
+                                    : "flex justify-start"
+                            }
                         >
-                            {!isSystem && (
-                                <p className="text-sm font-bold mb-1">
-                                    {msg.user}
+                            <div
+                                className={`relative max-w-[75%] px-4 py-3 rounded-2xl shadow-md transition-all
+                                    ${
+                                        isSystem
+                                            ? "bg-yellow-200 text-gray-900 text-center"
+                                            : isCurrentUser
+                                            ? "bg-gradient-to-br from-blue-600 via-indigo-500 to-blue-700 text-white self-end"
+                                            : "bg-white/90 text-gray-900 self-start"
+                                    }
+                                    ${
+                                        isSystem
+                                            ? "mx-auto"
+                                            : isCurrentUser
+                                            ? "ml-12"
+                                            : "mr-12"
+                                    }
+                                `}
+                                style={{
+                                    borderBottomRightRadius: isCurrentUser
+                                        ? 0
+                                        : undefined,
+                                    borderBottomLeftRadius:
+                                        !isCurrentUser && !isSystem
+                                            ? 0
+                                            : undefined,
+                                }}
+                            >
+                                {!isSystem && (
+                                    <p
+                                        className={`text-xs font-semibold mb-1 ${
+                                            isCurrentUser
+                                                ? "text-blue-200"
+                                                : "text-indigo-700"
+                                        }`}
+                                    >
+                                        {msg.user}
+                                    </p>
+                                )}
+                                <p className="break-words text-base">
+                                    {msg.text}
                                 </p>
-                            )}
-                            <p>{msg.text}</p>
-                            <p className="text-xs text-gray-200 mt-1 text-right">
-                                {new Date(msg.timestamp).toLocaleTimeString()}
-                            </p>
+                                <p
+                                    className={`text-[0.7rem] mt-1 ${
+                                        isCurrentUser
+                                            ? "text-blue-200 text-right"
+                                            : isSystem
+                                            ? "text-gray-700 text-center"
+                                            : "text-gray-500 text-left"
+                                    }`}
+                                >
+                                    {new Date(msg.timestamp).toLocaleTimeString(
+                                        [],
+                                        { hour: "2-digit", minute: "2-digit" }
+                                    )}
+                                </p>
+                            </div>
                         </div>
                     );
                 })}

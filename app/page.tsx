@@ -1,4 +1,3 @@
-// app/page.tsx
 "use client";
 
 import { useSession } from "next-auth/react";
@@ -28,17 +27,17 @@ export default function Home() {
             {/* Decorative gradient blobs */}
             <div
                 aria-hidden
-                className="pointer-events-none absolute -left-32 -top-32 w-96 h-96 rounded-full bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 opacity-30 blur-3xl animate-blob"
+                className="pointer-events-none absolute -left-48 -top-48 w-[32rem] h-[32rem] lg:w-[40rem] lg:h-[40rem] rounded-full bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 opacity-30 blur-3xl animate-blob"
             />
             <div
                 aria-hidden
-                className="pointer-events-none absolute -right-40 -bottom-40 w-[28rem] h-[28rem] rounded-full bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-600 opacity-25 blur-3xl animate-blob animation-delay-2000"
+                className="pointer-events-none absolute -right-56 -bottom-56 w-[32rem] h-[32rem] lg:w-[40rem] lg:h-[40rem] rounded-full bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-600 opacity-25 blur-3xl animate-blob animation-delay-2000"
             />
 
-            <main className="relative z-10 w-full max-w-3xl">
-                <section className="bg-[rgba(255,255,255,0.04)] dark:bg-[rgba(10,10,10,0.5)] backdrop-blur-md border border-white/8 rounded-3xl p-10 shadow-2xl">
+            <main className="relative z-10 w-full max-w-5xl px-4 md:px-6 lg:px-8 mx-auto">
+                <section className="bg-[rgba(255,255,255,0.04)] dark:bg-[rgba(10,10,10,0.5)] backdrop-blur-md border border-white/8 rounded-3xl p-6 md:p-10 lg:p-14 shadow-2xl">
                     <header className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-start md:items-center gap-4 flex-1">
                             <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-indigo-500 to-pink-500 flex items-center justify-center shadow-lg">
                                 <svg
                                     width="28"
@@ -62,10 +61,10 @@ export default function Home() {
                                 </svg>
                             </div>
                             <div>
-                                <h1 className="text-3xl md:text-4xl font-semibold text-white">
+                                <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-white">
                                     Live Communication Platform
                                 </h1>
-                                <p className="mt-1 text-sm text-white/70 max-w-xl">
+                                <p className="mt-1 text-sm md:text-base lg:text-lg text-white/70 max-w-2xl">
                                     Real-time messaging and collaboration —
                                     secure, fast and beautiful. Get started in
                                     seconds.
@@ -76,16 +75,16 @@ export default function Home() {
                         <div className="flex items-center gap-3">
                             <button
                                 onClick={handleStart}
-                                className="inline-flex items-center gap-3 px-5 py-3 rounded-lg font-medium text-white shadow-md transition transform hover:-translate-y-0.5 focus:outline-none bg-gradient-to-r from-indigo-500 to-pink-500"
+                                className="inline-flex items-center gap-3 px-6 py-3 text-base lg:text-lg rounded-lg font-medium text-white shadow-md transition transform hover:-translate-y-0.5 focus:outline-none bg-gradient-to-r from-indigo-500 to-pink-500"
                             >
                                 Start Communication
                             </button>
                         </div>
                     </header>
 
-                    <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
                         <div className="p-4 rounded-lg bg-white/3 border border-white/6">
-                            <h3 className="font-medium text-white">
+                            <h3 className="font-medium text-white text-lg">
                                 Real-time
                             </h3>
                             <p className="text-sm text-white/70 mt-1">
@@ -93,13 +92,15 @@ export default function Home() {
                             </p>
                         </div>
                         <div className="p-4 rounded-lg bg-white/3 border border-white/6">
-                            <h3 className="font-medium text-white">Secure</h3>
+                            <h3 className="font-medium text-white text-lg">
+                                Secure
+                            </h3>
                             <p className="text-sm text-white/70 mt-1">
                                 End-to-end patterns and robust auth flows.
                             </p>
                         </div>
                         <div className="p-4 rounded-lg bg-white/3 border border-white/6">
-                            <h3 className="font-medium text-white">
+                            <h3 className="font-medium text-white text-lg">
                                 Productive
                             </h3>
                             <p className="text-sm text-white/70 mt-1">
@@ -108,7 +109,7 @@ export default function Home() {
                         </div>
                     </div>
 
-                    <footer className="mt-8 text-sm text-white/60">
+                    <footer className="mt-10 text-sm text-white/60">
                         <span>Need help? </span>
                         <a href="#" className="text-indigo-300 underline">
                             Contact support
