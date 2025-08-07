@@ -1,103 +1,145 @@
-import Image from "next/image";
+// app/page.tsx
+"use client";
+
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    const { data: session } = useSession();
+    const router = useRouter();
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+    useEffect(() => {
+        if (session) {
+            router.push("/communication");
+        }
+    }, [session, router]);
+
+    const handleStart = () => {
+        if (session) {
+            router.push("/communication");
+        } else {
+            router.push("/auth");
+        }
+    };
+
+    return (
+        <div className="min-h-screen flex items-center justify-center relative overflow-hidden px-4">
+            {/* Decorative gradient blobs */}
+            <div
+                aria-hidden
+                className="pointer-events-none absolute -left-32 -top-32 w-96 h-96 rounded-full bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 opacity-30 blur-3xl animate-blob"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            <div
+                aria-hidden
+                className="pointer-events-none absolute -right-40 -bottom-40 w-[28rem] h-[28rem] rounded-full bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-600 opacity-25 blur-3xl animate-blob animation-delay-2000"
+            />
+
+            <main className="relative z-10 w-full max-w-3xl">
+                <section className="bg-[rgba(255,255,255,0.04)] dark:bg-[rgba(10,10,10,0.5)] backdrop-blur-md border border-white/8 rounded-3xl p-10 shadow-2xl">
+                    <header className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                        <div className="flex items-center gap-4">
+                            <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-indigo-500 to-pink-500 flex items-center justify-center shadow-lg">
+                                <svg
+                                    width="28"
+                                    height="28"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    aria-hidden
+                                >
+                                    <path
+                                        d="M3 12h18"
+                                        stroke="white"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                    />
+                                    <path
+                                        d="M12 3v18"
+                                        stroke="white"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                    />
+                                </svg>
+                            </div>
+                            <div>
+                                <h1 className="text-3xl md:text-4xl font-semibold text-white">
+                                    Live Communication Platform
+                                </h1>
+                                <p className="mt-1 text-sm text-white/70 max-w-xl">
+                                    Real-time messaging and collaboration —
+                                    secure, fast and beautiful. Get started in
+                                    seconds.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                            <button
+                                onClick={handleStart}
+                                className="inline-flex items-center gap-3 px-5 py-3 rounded-lg font-medium text-white shadow-md transition transform hover:-translate-y-0.5 focus:outline-none bg-gradient-to-r from-indigo-500 to-pink-500"
+                            >
+                                Start Communication
+                            </button>
+                        </div>
+                    </header>
+
+                    <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="p-4 rounded-lg bg-white/3 border border-white/6">
+                            <h3 className="font-medium text-white">
+                                Real-time
+                            </h3>
+                            <p className="text-sm text-white/70 mt-1">
+                                Low-latency messaging and presence updates.
+                            </p>
+                        </div>
+                        <div className="p-4 rounded-lg bg-white/3 border border-white/6">
+                            <h3 className="font-medium text-white">Secure</h3>
+                            <p className="text-sm text-white/70 mt-1">
+                                End-to-end patterns and robust auth flows.
+                            </p>
+                        </div>
+                        <div className="p-4 rounded-lg bg-white/3 border border-white/6">
+                            <h3 className="font-medium text-white">
+                                Productive
+                            </h3>
+                            <p className="text-sm text-white/70 mt-1">
+                                Keyboard friendly UI and quick onboarding.
+                            </p>
+                        </div>
+                    </div>
+
+                    <footer className="mt-8 text-sm text-white/60">
+                        <span>Need help? </span>
+                        <a href="#" className="text-indigo-300 underline">
+                            Contact support
+                        </a>
+                    </footer>
+                </section>
+            </main>
+
+            {/* local animation styles */}
+            <style jsx>{`
+                .animate-blob {
+                    animation: blob 8s infinite;
+                }
+                .animation-delay-2000 {
+                    animation-delay: 2s;
+                }
+                @keyframes blob {
+                    0% {
+                        transform: translateY(0px) scale(1);
+                    }
+                    33% {
+                        transform: translateY(-20px) scale(1.05);
+                    }
+                    66% {
+                        transform: translateY(10px) scale(0.95);
+                    }
+                    100% {
+                        transform: translateY(0px) scale(1);
+                    }
+                }
+            `}</style>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    );
 }
